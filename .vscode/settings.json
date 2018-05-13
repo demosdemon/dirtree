@@ -1,0 +1,6 @@
+{
+  "python.pythonPath": "/Users/demosdemon/.local/share/virtualenvs/dirtree-q7_bzRot/bin/python",
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": true,
+  "python.linting.enabled": true
+}
