@@ -37,10 +37,27 @@ class ValidateMixin:
                         method()
 
 
+def _format_kwargs(self, items, stream, indent, allowance, context, level):
+    write = stream.write
+    indent += self._indent_per_level
+    delimnl = ',\n' + ' ' * indent
+    last_index = len(items) - 1
+    for i, (key, ent) in enumerate(items):
+        last = i == last_index
+        rep = str(key)
+        write(rep)
+        write('=')
+        self._format(ent, stream, indent + len(rep) + 1,
+                     allowance if last else 1, context, level)
+        if not last:
+            write(delimnl)
+
+
 def _pprint_fields_mixin(self, object, stream, indent, allowance, context, level):
     cls = object.__class__
-    stream.write(cls.__name__ + '{')
-    self._format_dict_items(
+    stream.write(cls.__name__ + '(')
+    _format_kwargs(
+        self,
         list(object._iter_repr_fields(identity)),
         stream,
         indent + len(cls.__name__),
@@ -48,7 +65,7 @@ def _pprint_fields_mixin(self, object, stream, indent, allowance, context, level
         context,
         level
     )
-    stream.write('}')
+    stream.write(')')
 
 
 pprint.PrettyPrinter._dispatch[FieldsMixin.__repr__] = _pprint_fields_mixin
