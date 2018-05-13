@@ -4,17 +4,8 @@ import stat
 
 from dateutil import tz
 
+from .constants import STAT_FMT_TYPE
 from .mixins import FieldsMixin
-
-STAT_FMT_TYPE = {
-    stat.S_IFDIR: 'directory',
-    stat.S_IFCHR: 'char',
-    stat.S_IFBLK: 'block',
-    stat.S_IFREG: 'file',
-    stat.S_IFIFO: 'fifo',
-    stat.S_IFLNK: 'symlink',
-    stat.S_IFSOCK: 'socket',
-}
 
 
 def _ts(ts):

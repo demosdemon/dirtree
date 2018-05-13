@@ -1,3 +1,4 @@
+import stat
 from collections import OrderedDict
 
 PREFIXES = OrderedDict((
@@ -35,3 +36,13 @@ PATTERNS
     will skip all files and subdirectories ending in .o (including the file .o
     itself).
 '''
+
+STAT_FMT_TYPE = {
+    stat.S_IFDIR: 'directory',
+    stat.S_IFCHR: 'char',
+    stat.S_IFBLK: 'block',
+    stat.S_IFREG: 'file',
+    stat.S_IFIFO: 'fifo',
+    stat.S_IFLNK: 'symlink',
+    stat.S_IFSOCK: 'socket',
+}
