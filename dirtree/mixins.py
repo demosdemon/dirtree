@@ -42,7 +42,7 @@ class ValidateMixin:
 
 def _pprint_fields_mixin(self, object, stream, indent, allowance, context, level):
     cls = object.__class__
-    stream.write(cls.__name__ + '(')
+    stream.write(cls.__name__ + '{')
     self._format_dict_items(
         list(object._iter_repr_fields(identity)),
         stream,
@@ -51,7 +51,7 @@ def _pprint_fields_mixin(self, object, stream, indent, allowance, context, level
         context,
         level
     )
-    stream.write(')')
+    stream.write('}')
 
 
 pprint.PrettyPrinter._dispatch[FieldsMixin.__repr__] = _pprint_fields_mixin
