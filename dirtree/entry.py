@@ -22,7 +22,9 @@ def _ts(ts):
 
 
 def _strftime(ts):
-    return ts.strftime('%F %T %z')
+    if ts:
+        return ts.strftime('%F %T %z')
+    return 'None'
 
 
 class Entry(FieldsMixin):
@@ -59,15 +61,15 @@ class Entry(FieldsMixin):
 
     @property
     def is_dir(self):
-        return self and stat.S_ISDIR(self.mode)
+        return self.exists and stat.S_ISDIR(self.mode)
 
     @property
     def is_file(self):
-        return self and stat.S_ISREG(self.mode)
+        return self.exists and stat.S_ISREG(self.mode)
 
     @property
     def is_symlink(self):
-        return self and stat.S_ISLNK(self.mode)
+        return self.exists and stat.S_ISLNK(self.mode)
 
     @property
     def readlink(self):
@@ -99,40 +101,40 @@ class Entry(FieldsMixin):
 
     @property
     def mode(self):
-        return self and self.stat.st_mode
+        return self.exists and self.stat.st_mode
 
     @property
     def inode(self):
-        return self and self.stat.st_ino
+        return self.exists and self.stat.st_ino
 
     @property
     def device(self):
-        return self and self.stat.st_dev
+        return self.exists and self.stat.st_dev
 
     @property
     def num_links(self):
-        return self and self.stat.st_nlink
+        return self.exists and self.stat.st_nlink
 
     @property
     def uid(self):
-        return self and self.stat.st_uid
+        return self.exists and self.stat.st_uid
 
     @property
     def gid(self):
-        return self and self.stat.st_gid
+        return self.exists and self.stat.st_gid
 
     @property
     def size(self):
-        return self and self.stat.st_size
+        return self.exists and self.stat.st_size
 
     @property
     def atime(self):
-        return self and _ts(self.stat.st_atime)
+        return self.exists and _ts(self.stat.st_atime)
 
     @property
     def mtime(self):
-        return self and _ts(self.stat.st_mtime)
+        return self.exists and _ts(self.stat.st_mtime)
 
     @property
     def ctime(self):
-        return self and _ts(self.stat.st_ctime)
+        return self.exists and _ts(self.stat.st_ctime)
