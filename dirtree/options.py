@@ -1,9 +1,9 @@
 import datetime
 from operator import methodcaller
 
+from .entry import Entry
 from .mixins import FieldsMixin, ValidateMixin
 from .reader import Reader
-from .walker import Entry
 
 
 class Options(FieldsMixin, ValidateMixin):
