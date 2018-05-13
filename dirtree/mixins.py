@@ -1,9 +1,6 @@
 import pprint
 
-
-def identity(x):
-    '''return the input value'''
-    return x
+from .utils import identity
 
 
 class FieldsMixin:

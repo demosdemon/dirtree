@@ -1,29 +1,17 @@
-import datetime
 import os
 import stat
 
-from dateutil import tz
-
 from .constants import STAT_FMT_TYPE
 from .mixins import FieldsMixin
-
-
-def _ts(ts):
-    return datetime.datetime.fromtimestamp(ts, tz.tzlocal())
-
-
-def _strftime(ts):
-    if ts:
-        return ts.strftime('%F %T %z')
-    return 'None'
+from .utils import local_timestamp, strftime
 
 
 class Entry(FieldsMixin):
     __repr_fields__ = (
         'name', 'path', 'exists', 'type', 'is_dir', 'is_file', 'is_symlink',
         'readlink', ('mode', stat.filemode), ('device', hex), ('inode', hex),
-        'num_links', 'uid', 'gid', 'size', ('atime', _strftime),
-        ('mtime', _strftime), ('ctime', _strftime),
+        'num_links', 'uid', 'gid', 'size', ('atime', strftime),
+        ('mtime', strftime), ('ctime', strftime),
     )
 
     def __init__(self, dir_entry):
@@ -120,12 +108,12 @@ class Entry(FieldsMixin):
 
     @property
     def atime(self):
-        return self.exists and _ts(self.stat.st_atime)
+        return self.exists and local_timestamp(self.stat.st_atime)
 
     @property
     def mtime(self):
-        return self.exists and _ts(self.stat.st_mtime)
+        return self.exists and local_timestamp(self.stat.st_mtime)
 
     @property
     def ctime(self):
-        return self.exists and _ts(self.stat.st_ctime)
+        return self.exists and local_timestamp(self.stat.st_ctime)
