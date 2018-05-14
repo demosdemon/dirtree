@@ -59,13 +59,15 @@ class Entry(FieldsMixin):
         try:
             return self._readlink
         except AttributeError:
-            if self.is_symlink:
-                link = os.readlink(self.path)
-                self._readlink = os.path.join(self.path, link)
-            else:
-                self._readlink = None
+            pass
 
-            return self._readlink
+        if self.is_symlink:
+            link = os.readlink(self.path)
+            self._readlink = os.path.join(self.path, link)
+        else:
+            self._readlink = None
+
+        return self._readlink
 
     def __len__(self):
         if self.is_dir:
