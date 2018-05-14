@@ -4,12 +4,24 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+python-dateutil = "*"
 
 [dev-packages]
 "autopep8" = "*"
 "flake8" = "*"
 ipython = "*"
 ipdb = "*"
+pytest = ">=2.8.0"
+codecov = "*"
+pytest-mock = "*"
+pytest-cov = "*"
+pytest-xdist = "*"
+alabaster = "*"
+readme-renderer = "*"
+sphinx = "<=1.5.5"
+docutils = "*"
+tox = "*"
+detox = "*"
 
 [requires]
 python_version = "3.6"
