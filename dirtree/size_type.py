@@ -70,6 +70,6 @@ def humanize_size(n_bytes, base=1024):
         value = math.trunc(value)
         fmt = '%d%s' % (value, suffix)
         if value < base:
-            fmt
+            return fmt
 
     return fmt
