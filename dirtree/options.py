@@ -86,7 +86,7 @@ class Options(FieldsMixin, ValidateMixin):
 
         :rtype: bool
         '''
-        return self._args.dereference_args
+        return self.dereference or self._args.dereference_args
 
     @property
     def exclude(self):
@@ -124,7 +124,11 @@ class Options(FieldsMixin, ValidateMixin):
 
         self._files = []
         for file in self._iter_files(self._args.files0_from, *self._args.files):
-            self._files.append(Entry(file))
+            entry = Entry(file)
+            self._files.append(entry)
+            if self.dereference_args and entry.is_symlink:
+                entry = Entry(entry.readlink)
+                self._files.append(entry)
 
         if not self._files:
             self._files.append(Entry('.'))

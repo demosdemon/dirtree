@@ -1,42 +1,80 @@
-from collections import Iterator
+import os
+from itertools import chain
 
 from .entry import Entry
 
 
-def _get_key(obj, key, default=None):
-    try:
-        return obj[key]
-    except (AttributeError, TypeError, KeyError):
-        pass
+class EntryWalker:
+    '''Recursively walks down a path rooted at `entry` with `options`
 
-    try:
-        return getattr(obj, key)
-    except AttributeError:
-        pass
+    :type options: dirtree.options.Options
+    :type entry: dirtree.entry.Entry
+    '''
 
-    return default
-
-
-class DirectoryWalker(Iterator):
-    def __init__(self, *paths, **kwargs):
-        self.dereference = _get_key(kwargs, 'dereference', False)
-        self.dereference_args = _get_key(kwargs, 'dereference_args', False)
-
-        self._queue = []
-
-        for path in paths:
-            self.add_root(path)
+    def __init__(self, options, entry):
+        self.options = options
+        self.entry = entry
+        self.queue = self.__descend(entry, options.dereference_args)
 
     def __iter__(self):
         return self
 
-    def __next__(self):
-        return None
+    def __same_device(self, entry):
+        if not self.options.one_file_system:
+            return True
 
-    def add_root(self, path):
-        dereference = self.dereference or self.dereference_args
-        entry = Entry(path)
+        if entry is self.entry:
+            return True
+
+        return self.entry.device == entry.device
+
+    def __excluded(self, entry):
+        for pred in self.options.exclude:
+            if pred(entry):
+                return True
+
+        return False
+
+    def __threshold(self, entry):
+        thresh = self.options.threshold
+        if thresh is None:
+            return True
+
+        if thresh == 0:
+            return entry.size == 0
+
+        if thresh < 0:
+            return -thresh <= entry.size
+
+        return entry.size <= thresh
+
+    def __descend(self, entry, dereference=None):
+        if dereference is None:
+            dereference = self.options.dereference
+
+        if not self.__same_device(entry):
+            return ()
+
+        result = (entry, )
+
         if dereference and entry.is_symlink:
-            entry = Entry(entry.readlink)
+            ref = Entry(entry.readlink)
+            result = chain(self.__descend(ref), result)
 
-        self._queue.append(entry)
+        if not entry.is_dir:
+            return result
+
+        sub = os.scandir(entry.path)
+        sub = map(Entry, sub)
+        sub = map(self.__descend, sub)
+        sub = chain.from_iterable(sub)
+
+        result = chain(sub, result)
+        return result
+
+    def __next__(self):
+        while True:
+            entry = next(self.queue)
+            assert isinstance(entry, Entry)
+            if not self.__excluded(entry) and self.__threshold(entry):
+                return entry

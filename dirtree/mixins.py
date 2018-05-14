@@ -7,10 +7,12 @@ class FieldsMixin:
     def _iter_repr_fields(self, _repr=repr):
         for field in self.__repr_fields__:
             if isinstance(field, tuple):
-                field, _repr = field
+                field, f = field
+            else:
+                field, f = field, _repr
 
             value = getattr(self, field)
-            value = _repr(value)
+            value = f(value)
 
             yield field, value
 
