@@ -15,10 +15,14 @@ class Entry(FieldsMixin):
     )
 
     def __init__(self, dir_entry):
-        if isinstance(dir_entry, os.DirEntry):
+        if isinstance(dir_entry, (Entry, os.DirEntry)):
             self.name = dir_entry.name
             self.path = dir_entry.path
-            self.stat = dir_entry.stat()
+            st = dir_entry.stat
+            if callable(st):
+                self.stat = st()
+            else:
+                self.stat = st
         else:
             self.name = os.path.basename(dir_entry)
             self.path = dir_entry
