@@ -44,9 +44,9 @@ class EntryWalker:
             return entry.size == 0
 
         if thresh < 0:
-            return -thresh <= entry.size
+            return entry.size <= -thresh
 
-        return entry.size <= thresh
+        return thresh <= entry.size
 
     def __descend(self, entry, dereference=None):
         if dereference is None:
