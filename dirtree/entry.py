@@ -20,7 +20,7 @@ class Entry(FieldsMixin):
             self.path = dir_entry.path
             st = dir_entry.stat
             if callable(st):
-                self.stat = st()
+                self.stat = st(follow_symlinks=False)
             else:
                 self.stat = st
         else:
