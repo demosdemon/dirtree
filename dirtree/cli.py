@@ -236,8 +236,8 @@ parser.add_argument(
 )
 
 
-def main():
-    args = Options(parser.parse_args())
+def main(args=None):
+    args = Options(parser.parse_args(args))
 
     # pprint(args)
 
