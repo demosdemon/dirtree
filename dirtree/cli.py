@@ -1,7 +1,10 @@
 import argparse
+from pprint import pprint
 
 from .constants import DESCRIPTION, EPILOG
+from .options import Options
 from .size_type import parse_size_type
+from .walker import EntryWalker
 
 
 class MetaAction(argparse.Action):
@@ -231,3 +234,17 @@ parser.add_argument(
     action='help',
     help='display this help and exit'
 )
+
+
+def main():
+    args = Options(parser.parse_args())
+
+    # pprint(args)
+
+    for file in args.files:
+        for entry in EntryWalker(args, file):
+            pprint(entry)
+
+
+if __name__ == '__main__':
+    main()

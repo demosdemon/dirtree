@@ -109,7 +109,7 @@ setup(
     packages=packages,
     entry_points={
         'console_scripts': [
-            'dirtree=dirtree.__main__:main'
+            'dirtree=dirtree.cli:main'
         ]
     },
     include_package_data=True,
