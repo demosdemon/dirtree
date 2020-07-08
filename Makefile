@@ -9,7 +9,7 @@ test:
 	detox
 
 ci:
-	pipenv run py.test -n 8 --boxed --junitxml=report.xml --junit_family=xunit1
+	pipenv run py.test -n 8 --boxed --junitxml=report.xml --junit-family=xunit1
 
 test-readme:
 	@pipenv run python setup.py check --restructuredtext --strict && \
